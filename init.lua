@@ -37,6 +37,8 @@ local function dotranslate(lang,phrase)
 end
 
 minetest.register_chatcommand("babel",{
+	description = "Translate a sentence",
+	params = "<lang-code> <sentence>",
 	func = function(player,argstring)
 		local targetlang,targetphrase = components(argstring)
 
@@ -53,6 +55,8 @@ minetest.register_chatcommand("babel",{
 })
 
 minetest.register_chatcommand("babelshout",{
+	description = "Translate a sentence and transmit it to everybody",
+	params = "<lang-code> <sentence>",
 	func = function(player,argstring)
 		local targetlang,targetphrase = components(argstring)
 
@@ -69,6 +73,8 @@ minetest.register_chatcommand("babelshout",{
 })
 
 minetest.register_chatcommand("babelmsg",{
+	description = "Translate a sentence, and send it to a specific player",
+	params = "<lang-code> <player> <sentence>",
 	func = function(player,argstring)
 		local targetlang,targetphrase = components(argstring)
 		local targetplayer,targetphrase = components(targetphrase)
