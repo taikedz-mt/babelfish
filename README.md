@@ -17,6 +17,9 @@ Add translation commands to Minetest
 	* Sends a private message to another player in the target language
 	* `/babelmsg es spanishplayer I do not understand you, please use the translation commands`
 
+* `/bblangs`
+	* List the available language codes
+
 # Configuration
 
 Add the engine name (yandex, bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`

@@ -22,7 +22,7 @@ local function components(mystring)
 end
 
 local function validate_lang(langstring)
-	for _, target in pairs(babel.langcodes) do
+	for target, langname in pairs(babel.langcodes) do
 		if target == langstring then
 			return true
 		end
@@ -94,9 +94,16 @@ function f_babelmsg(player, argstring)
 	minetest.log("action", player.." PM to "..targetplayer.." [BABEL]: "..newphrase)
 end
 
+minetest.register_chatcommand("bblangs", {
+	description = "List the available language codes",
+	func = function(player,command)
+		minetest.chat_send_player(player,dump(babel.langcodes))
+	end
+})
+
 minetest.register_chatcommand("babel", {
-	description = "Translate a sentence",
-	params = "<lang-code> <sentence>",
+	description = "Translate a player's last chat message",
+	params = "<playername> <lang-code>",
 	func = f_babel
 })
 
