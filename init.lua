@@ -15,7 +15,7 @@ end)
 
 local function components(mystring)
 	local iter = mystring:gmatch("%S+")
-	local targetlang = iter()
+	local targetlang = iter() or ""
 	local targetphrase = mystring:gsub("^"..targetlang.." ", "")
 
 	return targetlang, targetphrase
