@@ -6,7 +6,6 @@ end
 
 function babel.chat_send_all(message)
 	if irct then
-		minetest.debug("Sending IRC chat ...")
 		irc:say(message)
 	end
 	minetest.chat_send_all(message)
