@@ -24,7 +24,11 @@ Add translation commands to Minetest
 
 Add the engine name (yandex, bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`
 
+	babelfish.engine = yandex
+
 Add your API key to `minetest.conf` under `babelfish.key`
+
+	babelfish.key = <your key>
 
 ## Requirements
 
@@ -32,8 +36,9 @@ The server requires `lua-json` and `lua-sec` to be installed, as well as potenti
 
 On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
 
-	apt-get install luarocks
-	luarocks install luasec luajson
+	apt-get install luarocks gcc
+	luarocks install luasec
+	luarocks install luasec
 
 ## Integrations
 
@@ -45,19 +50,21 @@ Available translation engine currently available is only Yandex
 
 Others can be made available as required.
 
-The engine must provide a single function onto the `babel` object
+* The engine must provide a single function onto the `babel` object
 
-	babel:translate(language_code, sentence)
+	`babel:translate(language_code, sentence)`
 
-The function must return a string representing the translated text.
+	* The function must return a string representing the translated text.
 
-The engine must also provide a table on `babel.langcodes` containing the list of language codes supported by the service.
+* The engine must also provide a table on `babel.langcodes` containing the list of language codes supported by the service.
 
-The engine can make use of the `babel:http(url)` and `babel:https(url)`
+	`babel.langcodes = {en = "English", fr = "French"}`
+
+* The engine can make use of the `babel:request(url)` helper function which make the request (http or https) and return the raw response data.
 
 ## Language codes
 
-The following language codes were compiled from the Yandex API page as the languages supported by Yandex.
+The following language codes were taken from the Yandex API page as the languages supported by Yandex.
 
 	Code	Language
 

@@ -106,7 +106,7 @@ function babel.translate(self,phrase,lang)
 		"text="..phrase:gsub(" ","+").."&"..
 		"lang="..lang
 	
-	local response = babel:https(transurl)
+	local response = babel:request(transurl)
 	
 	return extract_phrase(response)
 end
