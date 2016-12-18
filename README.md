@@ -2,11 +2,10 @@
 
 Add translation commands to Minetest
 
-* `/babel {language} {player}`
-	* Translates the last 3 messages from the specified player
+* `/babel {player} {language}`
+	* Translates the last message from the specified player to the target language
 	* Only you see the result of this
-	* `/babel en mrGibberish`
-	* (still WIP - do not use yet)
+	* `/babel mrGibberish en`
 
 * `/babelshout {language} {sentence}`
 * `/bb {language} {sentence}`
