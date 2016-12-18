@@ -6,7 +6,6 @@ local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
 dofile(modpath.."/"..engine.."_engine.lua")
 
-local langstrings = {"en","fr","es","pl","de","ru"}
 
 local function components(mystring)
 	local iter = mystring:gmatch("%S+")
@@ -17,7 +16,7 @@ local function components(mystring)
 end
 
 local function validate_lang(langstring)
-	for _,target in pairs(langstrings) do
+	for _,target in pairs(babel.langcodes) do
 		if target == langstring then
 			return true
 		end
@@ -49,6 +48,7 @@ minetest.register_chatcommand("babel",{
 		local newphrase = dotranslate(targetlang,targetphrase)
 
 		minetest.chat_send_player(player,"[BABEL]: "..newphrase)
+		minetest.log("action", player.." translation [BABEL]: "..newphrase)
 	end
 })
 
@@ -64,6 +64,7 @@ minetest.register_chatcommand("babelshout",{
 		local newphrase = dotranslate(targetlang,targetphrase)
 
 		minetest.chat_send_all("[BABEL from "..player.."]: "..newphrase)
+		minetest.log("action", player.." translation to all [BABEL]: "..newphrase)
 	end
 })
 
@@ -85,5 +86,6 @@ minetest.register_chatcommand("babelmsg",{
 		local newphrase = dotranslate(targetlang,targetphrase)
 
 		minetest.chat_send_player(targetplayer,"[BABEL from "..player.."]: "..newphrase)
+		minetest.log("action", player.." translation to "..targetplayer.." [BABEL]: "..newphrase)
 	end
 })
