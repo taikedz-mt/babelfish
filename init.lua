@@ -37,62 +37,80 @@ local function dotranslate(lang,phrase)
 	return babel:translate(phrase,lang)
 end
 
+local function f_babel(player,argstring)
+	local targetlang,targetphrase = components(argstring)
+
+	if not validate_lang(targetlang) then
+		babel.chat_send_player(player,targetlang.." is not a recognized language")
+		return
+	end
+
+	local newphrase = dotranslate(targetlang,targetphrase)
+
+	babel.chat_send_player(player,"[BABEL]: "..newphrase)
+	minetest.log("action", player.." translation [BABEL]: "..newphrase)
+end
+
+function f_babelshout(player,argstring)
+	local targetlang,targetphrase = components(argstring)
+
+	if not validate_lang(targetlang) then
+		babel.chat_send_player(player,targetlang.." is not a recognized language")
+		return
+	end
+
+	local newphrase = dotranslate(targetlang,targetphrase)
+
+	babel.chat_send_all("[BABEL from "..player.."]: "..newphrase)
+	minetest.log("action", player.." translation to all [BABEL]: "..newphrase)
+end
+
+function f_babelmsg(player,argstring)
+	local targetlang,targetphrase = components(argstring)
+	local targetplayer,targetphrase = components(targetphrase)
+
+	if not validate_lang(targetlang) then
+		babel.chat_send_player(player,targetlang.." is not a recognized language")
+		return
+	end
+
+	if not validate_player(targetplayer) then
+		babel.chat_send_player(player,targetlang.." is not a connected player")
+		return
+	end
+	
+	local newphrase = dotranslate(targetlang,targetphrase)
+
+	babel.chat_send_player(targetplayer,"[BABEL from "..player.."]: "..newphrase)
+	minetest.log("action", player.." translation to "..targetplayer.." [BABEL]: "..newphrase)
+end
+
 minetest.register_chatcommand("babel",{
 	description = "Translate a sentence",
 	params = "<lang-code> <sentence>",
-	func = function(player,argstring)
-		local targetlang,targetphrase = components(argstring)
+	func = f_babel
+})
 
-		if not validate_lang(targetlang) then
-			babel.chat_send_player(player,targetlang.." is not a recognized language")
-			return
-		end
-
-		local newphrase = dotranslate(targetlang,targetphrase)
-
-		babel.chat_send_player(player,"[BABEL]: "..newphrase)
-		minetest.log("action", player.." translation [BABEL]: "..newphrase)
-	end
+minetest.register_chatcommand("bb",{
+	description = "Translate a sentence and transmit it to everybody",
+	params = "<lang-code> <sentence>",
+	func = f_babelshout
 })
 
 minetest.register_chatcommand("babelshout",{
 	description = "Translate a sentence and transmit it to everybody",
 	params = "<lang-code> <sentence>",
-	func = function(player,argstring)
-		local targetlang,targetphrase = components(argstring)
+	func = f_babelshout
+})
 
-		if not validate_lang(targetlang) then
-			babel.chat_send_player(player,targetlang.." is not a recognized language")
-			return
-		end
-
-		local newphrase = dotranslate(targetlang,targetphrase)
-
-		babel.chat_send_all("[BABEL from "..player.."]: "..newphrase)
-		minetest.log("action", player.." translation to all [BABEL]: "..newphrase)
-	end
+minetest.register_chatcommand("bmsg",{
+	description = "Translate a sentence, and send it to a specific player",
+	params = "<lang-code> <player> <sentence>",
+	func = f_babelmsg
 })
 
 minetest.register_chatcommand("babelmsg",{
 	description = "Translate a sentence, and send it to a specific player",
 	params = "<lang-code> <player> <sentence>",
-	func = function(player,argstring)
-		local targetlang,targetphrase = components(argstring)
-		local targetplayer,targetphrase = components(targetphrase)
-
-		if not validate_lang(targetlang) then
-			babel.chat_send_player(player,targetlang.." is not a recognized language")
-			return
-		end
-
-		if not validate_player(targetplayer) then
-			babel.chat_send_player(player,targetlang.." is not a connected player")
-			return
-		end
-		
-		local newphrase = dotranslate(targetlang,targetphrase)
-
-		babel.chat_send_player(targetplayer,"[BABEL from "..player.."]: "..newphrase)
-		minetest.log("action", player.." translation to "..targetplayer.." [BABEL]: "..newphrase)
-	end
+	func = f_babelmsg
 })
