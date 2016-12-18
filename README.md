@@ -2,15 +2,19 @@
 
 Add translation commands to Minetest
 
-* `/babel {language} {sentense}`
-	* Translates that sentence to English for you
-	* `/babel en une phrase en langue etrangere`
+* `/babel {language} {player}`
+	* Translates the last 3 messages from the specified player
+	* Only you see the result of this
+	* `/babel en mrGibberish`
+	* (still WIP - do not use yet)
 
 * `/babelshout {language} {sentence}`
+* `/bb {language} {sentence}`
 	* Broadcasts a message in the target language (French in this case)
 	* `/babelshout fr My english sentence`
 
 * `/babelmsg {language} {player} {sentence}`
+* `/bmsg {language} {player} {sentence}`
 	* Sends a private message to another player in the target language
 	* `/babelmsg es spanishplayer I do not understand you, please use the translation commands`
 
@@ -22,7 +26,16 @@ Add your API key to `minetest.conf` under `babelfish.key`
 
 ## Requirements
 
-The server requires `lua-json` and `lua-sec` (Ubuntu's package names) to be installed, as well as potentially adding the mod to the trusted mods for security purposes.
+The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes.
+
+On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
+
+	apt-get install luarocks
+	luarocks install luasec luajson
+
+## Integrations
+
+This mod supports IRC - any shout actions are propagated through the IRC too.
 
 ## Engines
 
