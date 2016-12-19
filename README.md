@@ -18,24 +18,6 @@ Add translation commands to Minetest
 * `/bblangs`
 	* List the available language codes
 
-# Configuration
-
-Add the engine name (yandex, bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`
-
-	babelfish.engine = yandex
-
-Add your API key to `minetest.conf` under `babelfish.key`
-
-	babelfish.key = <your key>
-
-You can obtain a Yandex Key by creating an account and requesting a key [https://tech.yandex.com/translate/](https://tech.yandex.com/translate/)
-
-You can display a friendly message to users who join by setting
-
-	babelfish.helponjoin = true
-
-Players will see a message when joining inviting them to check `/help bb` and `/help babel`
-
 ## Requirements
 
 The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
@@ -47,6 +29,22 @@ On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; in
 	apt-get install luarocks gcc
 	luarocks install luasec
 	luarocks install luasec
+
+# Configuration
+
+(Required) Add your API key to `minetest.conf` under `babelfish.key`
+
+	babelfish.key = <your key>
+
+(Optional) Add an engine name (bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`. Other engines would need to be developed.
+
+	babelfish.engine = yandex
+
+(Optional) You can display a friendly message to users who join by setting
+
+	babelfish.helponjoin = true
+
+Players will see a message when joining inviting them to check `/help bb` and `/help babel`
 
 ## Integrations
 
