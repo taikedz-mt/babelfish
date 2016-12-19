@@ -2,6 +2,10 @@
 
 Add translation commands to Minetest
 
+Provided under the GNU Lesser General Public License v3.0
+
+## Commands
+
 * `/babel {player}`
 	* Translates the last message from the specified player to your preferred language
 	* Only you see the result of this
