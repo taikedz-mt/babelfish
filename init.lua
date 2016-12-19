@@ -5,7 +5,23 @@ dofile(modpath.."/http.lua" )
 dofile(modpath.."/chat.lua" )
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
+
+-- ========================== Language engine and overridable validation
+
+function babel.validate_lang(self,langstring)
+	for target, langname in pairs(babel.langcodes) do
+		if target == langstring then
+			return true
+		end
+	end
+
+	return langstring.." is not a recognized language"
+end
+
+if not babel.key then engine = "none" end
 dofile(modpath.."/"..engine.."_engine.lua")
+
+-- =====================================================================/
 
 local chat_history = {}
 
@@ -19,16 +35,6 @@ local function components(mystring)
 	local targetphrase = mystring:gsub("^"..targetlang.." ", "")
 
 	return targetlang, targetphrase
-end
-
-local function validate_lang(langstring)
-	for target, langname in pairs(babel.langcodes) do
-		if target == langstring then
-			return true
-		end
-	end
-
-	return false
 end
 
 local function validate_player(playername)
@@ -45,8 +51,9 @@ end
 local function f_babel(player, argstring)
 	local targetplayer, targetlang = components(argstring)
 
-	if not validate_lang(targetlang) then
-		babel.chat_send_player(player, targetlang.." is not a recognized language")
+	local validation = babel:validate_lang(targetlang)
+	if validation ~= true then
+		babel.chat_send_player(player, validation)
 		return
 	end
 
@@ -63,8 +70,9 @@ end
 function f_babelshout(player, argstring)
 	local targetlang, targetphrase = components(argstring)
 
-	if not validate_lang(targetlang) then
-		babel.chat_send_player(player, targetlang.." is not a recognized language")
+	local validation = babel:validate_lang(targetlang)
+	if validation ~= true then
+		babel.chat_send_player(player, validation)
 		return
 	end
 
@@ -78,8 +86,9 @@ function f_babelmsg(player, argstring)
 	local targetlang, targetphrase = components(argstring)
 	local targetplayer, targetphrase = components(targetphrase)
 
-	if not validate_lang(targetlang) then
-		babel.chat_send_player(player, targetlang.." is not a recognized language")
+	local validation = babel:validate_lang(targetlang)
+	if validation ~= true then
+		babel.chat_send_player(player, validation)
 		return
 	end
 
