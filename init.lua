@@ -142,19 +142,7 @@ minetest.register_chatcommand("bb", {
 	func = f_babelshout
 })
 
-minetest.register_chatcommand("babelshout", {
-	description = "Translate a sentence and transmit it to everybody",
-	params = "<lang-code> <sentence>",
-	func = f_babelshout
-})
-
 minetest.register_chatcommand("bmsg", {
-	description = "Translate a sentence, and send it to a specific player",
-	params = "<lang-code> <player> <sentence>",
-	func = f_babelmsg
-})
-
-minetest.register_chatcommand("babelmsg", {
 	description = "Translate a sentence, and send it to a specific player",
 	params = "<lang-code> <player> <sentence>",
 	func = f_babelmsg
