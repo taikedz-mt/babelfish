@@ -53,3 +53,7 @@ Other mods can use the babelfish engine simply by calling `babel:translate(phras
 **Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
 For text that is provided by mods within the code, please use [inttlib](https://github.com/minetest-mods/intllib) instead.
+
+## Adding engines
+
+See the [Engines](Engines.md) file for more information.
