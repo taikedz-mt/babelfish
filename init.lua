@@ -49,7 +49,7 @@ local function dotranslate(lang, phrase)
 end
 
 local function f_babel(player, argstring)
-	local targetplayer, targetlang = components(argstring)
+	local targetlang, targetplayer = components(argstring)
 
 	local validation = babel:validate_lang(targetlang)
 	if validation ~= true then
@@ -64,10 +64,10 @@ local function f_babel(player, argstring)
 
 	local newphrase = dotranslate(targetlang, chat_history[targetplayer])
 
-	babel.chat_send_player(player, "[BABEL]: "..newphrase)
+	babel.chat_send_player(player, "["..babel.engine.."]: "..newphrase)
 end
 
-function f_babelshout(player, argstring)
+local function f_babelshout(player, argstring)
 	local targetlang, targetphrase = components(argstring)
 
 	local validation = babel:validate_lang(targetlang)
@@ -78,11 +78,11 @@ function f_babelshout(player, argstring)
 
 	local newphrase = dotranslate(targetlang, targetphrase)
 
-	babel.chat_send_all("[BABEL from "..player.."]: "..newphrase)
-	minetest.log("action", player.." CHAT [BABEL]: "..newphrase)
+	babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
+	minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
 end
 
-function f_babelmsg(player, argstring)
+local function f_babelmsg(player, argstring)
 	local targetlang, targetphrase = components(argstring)
 	local targetplayer, targetphrase = components(targetphrase)
 
@@ -99,8 +99,8 @@ function f_babelmsg(player, argstring)
 	
 	local newphrase = dotranslate(targetlang, targetphrase)
 
-	babel.chat_send_player(targetplayer, "[BABEL from "..player.."]: "..newphrase)
-	minetest.log("action", player.." PM to "..targetplayer.." [BABEL]: "..newphrase)
+	babel.chat_send_player(targetplayer, "["..babel.engine.." "..player.."]: "..newphrase)
+	minetest.log("action", player.." PM to "..targetplayer.." ["..babel.engine.."]: "..newphrase)
 end
 
 minetest.register_chatcommand("bblangs", {
@@ -112,7 +112,7 @@ minetest.register_chatcommand("bblangs", {
 
 minetest.register_chatcommand("babel", {
 	description = "Translate a player's last chat message",
-	params = "<playername> <lang-code>",
+	params = "<lang-code> <playername>",
 	func = f_babel
 })
 
@@ -139,3 +139,6 @@ minetest.register_chatcommand("babelmsg", {
 	params = "<lang-code> <player> <sentence>",
 	func = f_babelmsg
 })
+
+-- Display help string, and compliance if set
+dofile(minetest.get_modpath("babelfish").."/compliance.lua")
