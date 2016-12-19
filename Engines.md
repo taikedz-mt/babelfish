@@ -1,9 +1,5 @@
 # Translation Engines
 
-Some translation engines are provided for free and therefore require you to comply to certain rules.
-
-There is a `compliance.lua` file included to handle this.
-
 ## Build your own engine
 
 You can use the `example_engine.lua` file to base a new engine off of. It contains the basic API elements needed for a full engine.
@@ -22,7 +18,15 @@ You can use the `example_engine.lua` file to base a new engine off of. It contai
 
 * The engine can override `babel.validate_lang(self, language_code)` if needed to provide any special messages.
 
-* The engine can call `babel:request(url)` helper function which make the request (http or https) and return the raw response data.
+* The engine can use `babel:request(url)`, a helper function which makes the request (http or https) and returns the raw response data.
+
+### Compliance
+
+Some translation engines require you to comply to certain rules; most generally they require you to highlight the fact that your translations are provided by their engine.
+
+A `babel.compliance` variable can optionally be included, as the text to display when a player joins.
+
+The name of the engine is also displayed on all messages sent to chat, so that compliance is met, but also to indicate that the original meaning may have been lost in machine translation.
 
 ## Yandex.Translate
 
