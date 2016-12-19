@@ -99,7 +99,7 @@ local function f_babelmsg(player, argstring)
 	
 	local newphrase = dotranslate(targetlang, targetphrase)
 
-	babel.chat_send_player(targetplayer, "["..babel.engine.." "..player.."]: "..newphrase)
+	babel.chat_send_player(targetplayer, "["..babel.engine.." PM from "..player.."]: "..newphrase)
 	minetest.log("action", player.." PM to "..targetplayer.." ["..babel.engine.."]: "..newphrase)
 end
 

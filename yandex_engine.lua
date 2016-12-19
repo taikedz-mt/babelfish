@@ -1,4 +1,4 @@
-babel.engine = "yandex"
+babel.engine = "YANDEX" -- used for tagging messages
 
 babel.langcodes = {
 	af = "Afrikaans",
@@ -110,3 +110,6 @@ function babel.translate(self,phrase,lang)
 	
 	return extract_phrase(response)
 end
+
+babel.compliance = "Translations are Powered by Yandex.Translate"
+dofile(minetest.get_modpath("babelfish").."/compliance.lua")
