@@ -6,7 +6,7 @@ Most services are likely to require an API key, and you can add your own configu
 
 Therefore, remeber to document how to use and configure your engine, as well as how to obtain keys.
 
-Add a suitable file to the `engines-docs/` folder when creating an engine.
+Add a suitable file to the [`engines-docs/`](engines-docs/) folder when creating an engine.
 
 ## Build your own engine
 
