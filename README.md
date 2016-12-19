@@ -30,6 +30,12 @@ Add your API key to `minetest.conf` under `babelfish.key`
 
 You can obtain a Yandex Key by creating an account and requesting a key [https://tech.yandex.com/translate/](https://tech.yandex.com/translate/)
 
+You can display a friendly message to users who join by setting
+
+	babelfish.helponjoin = true
+
+Players will see a message when joining inviting them to check `/help bb` and `/help babel`
+
 ## Requirements
 
 The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
