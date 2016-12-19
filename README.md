@@ -2,20 +2,18 @@
 
 Add translation commands to Minetest
 
-* `/babel {player} {language}`
+* `/babel {language} {player}`
 	* Translates the last message from the specified player to the target language
 	* Only you see the result of this
 	* `/babel mrGibberish en`
 
-* `/babelshout {language} {sentence}`
 * `/bb {language} {sentence}`
 	* Broadcasts a message in the target language (French in this case)
-	* `/babelshout fr My english sentence`
+	* `/bb fr My english sentence`
 
-* `/babelmsg {language} {player} {sentence}`
 * `/bmsg {language} {player} {sentence}`
 	* Sends a private message to another player in the target language
-	* `/babelmsg es spanishplayer I do not understand you, please use the translation commands`
+	* `/bmsg es spanishplayer I do not understand you, please use the translation commands`
 
 * `/bblangs`
 	* List the available language codes
@@ -30,9 +28,13 @@ Add your API key to `minetest.conf` under `babelfish.key`
 
 	babelfish.key = <your key>
 
+You can obtain a Yandex Key by creating an account and requesting a key [https://tech.yandex.com/translate/](https://tech.yandex.com/translate/)
+
 ## Requirements
 
-The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes.
+The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
+
+	secure.trusted_mods = irc,babelfish
 
 On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
 
@@ -42,119 +44,12 @@ On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; in
 
 ## Integrations
 
-This mod supports IRC - any shout actions are propagated through the IRC too.
+This mod supports additional functions from [IRC](https://github.com/minetest-mods/irc) - any shout actions are propagated through the IRC too.
 
-## Engines
+## Use as an API
 
-Available translation engine currently available is only Yandex
+Other mods can use the babelfish engine simply by calling `babel:translate(phrase, language_code)` to obtain the translated string.
 
-Others can be made available as required.
+**Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
-* The engine must provide a single function onto the `babel` object
-
-	`babel:translate(language_code, sentence)`
-
-	* The function must return a string representing the translated text.
-
-* The engine must also provide a table on `babel.langcodes` containing the list of language codes supported by the service.
-
-	`babel.langcodes = {en = "English", fr = "French"}`
-
-* The engine can make use of the `babel:request(url)` helper function which make the request (http or https) and return the raw response data.
-
-## Language codes
-
-The following language codes were taken from the Yandex API page as the languages supported by Yandex.
-
-	Code	Language
-
-	af	Afrikaans
-	sq	Albanian
-	am	Amharic
-	ar	Arabic
-	hy	Armenian
-	az	Azerbaijan
-	ba	Bashkir
-	eu	Basque
-	be	Belarusian
-	bn	Bengali
-	bs	Bosnian
-	bg	Bulgarian
-	ca	Catalan
-	ceb	Cebuano
-	zh	Chinese
-	hr	Croatian
-	cs	Czech
-	da	Danish
-	nl	Dutch
-	en	English
-	eo	Esperanto
-	et	Estonian
-	fi	Finnish
-	fr	French
-	gl	Galician
-	ka	Georgian
-	de	German
-	el	Greek
-	gu	Gujarati
-	ht	Haitian (Creole)
-	he	Hebrew
-	mrj	Hill Mari
-	hi	Hindi
-	hu	Hungarian
-	is	Icelandic
-	id	Indonesian
-	ga	Irish
-	it	Italian
-	ja	Japanese
-	jv	Javanese
-	kn	Kannada
-	kk	Kazakh
-	ko	Korean
-	ky	Kyrgyz
-	la	Latin
-	lv	Latvian
-	lt	Lithuanian
-	mk	Macedonian
-	mg	Malagasy
-	ms	Malay
-	ml	Malayalam
-	mt	Maltese
-	mi	Maori
-	mr	Marathi
-	mhr	Mari
-	mn	Mongolian
-	ne	Nepali
-	no	Norwegian
-	pap	Papiamento
-	fa	Persian
-	pl	Polish
-	pt	Portuguese
-	pa	Punjabi
-	ro	Romanian
-	ru	Russian
-	gd	Scottish
-	sr	Serbian
-	si	Sinhala
-	sk	Slovakian
-	sl	Slovenian
-	es	Spanish
-	su	Sundanese
-	sw	Swahili
-	sv	Swedish
-	tl	Tagalog
-	tg	Tajik
-	ta	Tamil
-	tt	Tatar
-	te	Telugu
-	th	Thai
-	tr	Turkish
-	udm	Udmurt
-	uk	Ukrainian
-	ur	Urdu
-	uz	Uzbek
-	vi	Vietnamese
-	cy	Welsh
-	xh	Xhosa
-	yi	Yiddish
-
+For text that is provided by mods within the code, please use [inttlib](https://github.com/minetest-mods/intllib) instead.
