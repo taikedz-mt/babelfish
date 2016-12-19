@@ -28,7 +28,8 @@ On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; in
 
 	apt-get install luarocks gcc
 	luarocks install luasec
-	luarocks install luasec
+	luarocks install luajson
+	apt-get remove gcc
 
 # Configuration
 
@@ -56,7 +57,7 @@ Other mods can use the babelfish engine simply by calling `babel:translate(phras
 
 **Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
-For text that is provided by mods within the code, please use [inttlib](https://github.com/minetest-mods/intllib) instead.
+For hardcoded text that is provided by mods, please use [inttlib](https://github.com/minetest-mods/intllib) instead.
 
 ## Adding engines
 
