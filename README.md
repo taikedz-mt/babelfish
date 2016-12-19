@@ -2,10 +2,15 @@
 
 Add translation commands to Minetest
 
-* `/babel {language} {player}`
-	* Translates the last message from the specified player to the target language
+* `/babel {player}`
+	* Translates the last message from the specified player to your preferred language
 	* Only you see the result of this
-	* `/babel en mrGibberish`
+	* `/babel mrGibberish`
+
+* `/bblang {language}`
+	* Set your preferred language using a language code
+	* Default is English
+	* Currently does not save across server reboots
 
 * `/bb {language} {sentence}`
 	* Broadcasts a message in the target language (French in this case)
@@ -15,7 +20,7 @@ Add translation commands to Minetest
 	* Sends a private message to another player in the target language
 	* `/bmsg es spanishplayer I do not understand you, please use the translation commands`
 
-* `/bblangs`
+* `/bbcodes`
 	* List the available language codes
 
 ## Requirements
@@ -57,8 +62,15 @@ Other mods can use the babelfish engine simply by calling `babel:translate(phras
 
 **Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
-For hardcoded text that is provided by mods, please use [inttlib](https://github.com/minetest-mods/intllib) instead.
+For hardcoded text that is provided by mods, please use [intllib](https://github.com/minetest-mods/intllib) instead, until persistent translations are added.
 
 ## Adding engines
 
 See the [Engines](Engines.md) file for more information.
+
+## To-Do
+
+Still to implement:
+
+* Saving language preferences
+* Special "persistent translations" call so that a phrase is translated once, and stored for later re-use

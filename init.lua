@@ -24,6 +24,7 @@ dofile(modpath.."/"..engine.."_engine.lua")
 -- =====================================================================/
 
 local chat_history = {}
+local player_pref_language = {} -- TODO load/save to file
 
 minetest.register_on_chat_message(function(player, message)
 	chat_history[player] = message
@@ -49,7 +50,12 @@ local function dotranslate(lang, phrase)
 end
 
 local function f_babel(player, argstring)
-	local targetlang, targetplayer = components(argstring)
+	local targetplayer = argstring
+	if not player_pref_language[player] then
+		player_pref_language[player] = "en"
+	end
+
+	local targetlang = player_pref_language[player]
 
 	local validation = babel:validate_lang(targetlang)
 	if validation ~= true then
@@ -103,7 +109,21 @@ local function f_babelmsg(player, argstring)
 	minetest.log("action", player.." PM to "..targetplayer.." ["..babel.engine.."]: "..newphrase)
 end
 
-minetest.register_chatcommand("bblangs", {
+minetest.register_chatcommand("bblang", {
+	description = "Set your preferred language",
+	func = function(player,args)
+		local validation = babel:validate_lang(args)
+		if validation ~= true then
+			babel.chat_send_player(player, validation)
+			return
+		else
+			player_pref_language[player] = args
+			babel.chat_send_player(player, args.." : OK" )
+		end
+	end
+})
+
+minetest.register_chatcommand("bbcodes", {
 	description = "List the available language codes",
 	func = function(player,command)
 		minetest.chat_send_player(player,dump(babel.langcodes))
@@ -111,8 +131,8 @@ minetest.register_chatcommand("bblangs", {
 })
 
 minetest.register_chatcommand("babel", {
-	description = "Translate a player's last chat message",
-	params = "<lang-code> <playername>",
+	description = "Translate a player's last chat message. Use /bblang to set your language",
+	params = "<playername>",
 	func = f_babel
 })
 
