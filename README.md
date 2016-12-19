@@ -5,7 +5,7 @@ Add translation commands to Minetest
 * `/babel {language} {player}`
 	* Translates the last message from the specified player to the target language
 	* Only you see the result of this
-	* `/babel mrGibberish en`
+	* `/babel en mrGibberish`
 
 * `/bb {language} {sentence}`
 	* Broadcasts a message in the target language (French in this case)
