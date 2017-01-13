@@ -126,6 +126,7 @@ minetest.register_chatcommand("bblang", {
 		else
 			player_pref_language[player] = args
 			babel.chat_send_player(player, args.." : OK" )
+			prefsave()
 		end
 	end
 })
@@ -157,3 +158,29 @@ minetest.register_chatcommand("bmsg", {
 
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
+
+function prefsave()
+	local serdata = minetest.serialize(player_pref_language)
+	if not serdata then
+		minetest.log("error", "[babelfish] Data serialization failed")
+		return
+	end
+	local file, err = io.open(spawnsfile, "w")
+	if err then
+		return err
+	end
+	file:write(serdata)
+	file:close()
+end
+
+function prefload()
+	local file, err = io.open(spawnsfile, "r")
+	if err then
+		minetest.log("error", "[babelfish] Data read failed")
+		return
+	end
+	player_pref_language = minetest.deserialize(file:read("*a"))
+	file:close()
+end
+
+prefload()
