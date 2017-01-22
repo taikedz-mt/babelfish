@@ -13,7 +13,7 @@ minetest.register_on_joinplayer(function(player)
 	if babel.compliance then
 		minetest.chat_send_player(playername,babel.compliance)
 	end
-	if babel.compliance or helponjoin then
+	if helponjoin then
 		minetest.chat_send_player(playername, "This is an multilingual server!")
 		minetest.chat_send_player(playername, "Type '/help bb' and '/help babel' for more information on translations.")
 	end
