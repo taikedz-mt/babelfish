@@ -8,10 +8,30 @@
 babel = {}
 
 local modpath = minetest.get_modpath("babelfish")
-dofile(modpath.."/http.lua" )
 dofile(modpath.."/chat.lua" )
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
+
+-- ===== SECURITY ======
+
+local ie = minetest.request_insecure_environment()
+
+if not ie then
+	error("Could not get secure environment. Add babelfish to secure.trusted_mods ")
+end
+
+local oldrequire = require
+require = ie.require -- override require so that system libraries being loaded can benefit
+
+	if not babel.key then engine = "none" end
+	dofile(modpath.."/"..engine.."_engine.lua")
+
+	local httpapitable = minetest.request_http_api()
+	babel.register_http(httpapitable)
+
+require = oldrequire -- restore the sandbox's require
+
+-- =====================
 
 -- ========================== Language engine and overridable validation
 
@@ -24,9 +44,6 @@ function babel.validate_lang(self,langstring)
 
 	return langstring.." is not a recognized language"
 end
-
-if not babel.key then engine = "none" end
-dofile(modpath.."/"..engine.."_engine.lua")
 
 -- =====================================================================/
 
@@ -52,8 +69,8 @@ local function validate_player(playername)
 	return false
 end
 
-local function dotranslate(lang, phrase)
-	return babel:translate(phrase, lang)
+local function dotranslate(lang, phrase, handler)
+	return babel:translate(phrase, lang, handler)
 end
 
 local function f_babel(player, argstring)
@@ -75,9 +92,9 @@ local function f_babel(player, argstring)
 		return
 	end
 
-	local newphrase = dotranslate(targetlang, chat_history[targetplayer])
-
-	babel.chat_send_player(player, "["..babel.engine.."]: "..newphrase)
+	dotranslate(targetlang, chat_history[targetplayer], function(newphrase)
+		babel.chat_send_player(player, "["..babel.engine.."]: "..newphrase)
+	end)
 end
 
 local function f_babelshout(player, argstring)
@@ -89,10 +106,10 @@ local function f_babelshout(player, argstring)
 		return
 	end
 
-	local newphrase = dotranslate(targetlang, targetphrase)
-
-	babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
-	minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
+	dotranslate(targetlang, targetphrase, function(newphrase)
+		babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
+		minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
+	end)
 end
 
 local function f_babelmsg(player, argstring)
@@ -110,10 +127,10 @@ local function f_babelmsg(player, argstring)
 		return
 	end
 	
-	local newphrase = dotranslate(targetlang, targetphrase)
-
-	babel.chat_send_player(targetplayer, "["..babel.engine.." PM from "..player.."]: "..newphrase)
-	minetest.log("action", player.." PM to "..targetplayer.." ["..babel.engine.."]: "..newphrase)
+	dotranslate(targetlang, targetphrase, function(newphrase)
+		babel.chat_send_player(targetplayer, "["..babel.engine.." PM from "..player.."]: "..newphrase)
+		minetest.log("action", player.." PM to "..targetplayer.." ["..babel.engine.."]: "..newphrase)
+	end)
 end
 
 minetest.register_chatcommand("bblang", {
@@ -158,29 +175,3 @@ minetest.register_chatcommand("bmsg", {
 
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
-
-function prefsave()
-	local serdata = minetest.serialize(player_pref_language)
-	if not serdata then
-		minetest.log("error", "[babelfish] Data serialization failed")
-		return
-	end
-	local file, err = io.open(spawnsfile, "w")
-	if err then
-		return err
-	end
-	file:write(serdata)
-	file:close()
-end
-
-function prefload()
-	local file, err = io.open(spawnsfile, "r")
-	if err then
-		minetest.log("error", "[babelfish] Data read failed")
-		return
-	end
-	player_pref_language = minetest.deserialize(file:read("*a"))
-	file:close()
-end
-
-prefload()

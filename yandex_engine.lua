@@ -5,12 +5,13 @@
 -- in a LICENSE.txt file
 -- If not, please see https://www.gnu.org/licenses/lgpl-3.0.html
 
-local ie = minetest.request_insecure_environment()
-if not ie then
-	error("babelfish must be added to your secure.trusted_mods list")
-end
-local json = ie.require("json")
+local json = require("json")
 
+local httpapi
+
+function babel.register_http(hat)
+	httpapi = hat
+end
 
 babel.engine = "YANDEX" -- used for tagging messages
 
@@ -113,15 +114,20 @@ local function extract_phrase(json_string)
 	return jsontable.text[1]
 end
 
-function babel.translate(self,phrase,lang)
+function babel.translate(self, phrase, lang, handler)
 	local transurl = serviceurl ..
 		"key="..babel.key.."&"..
 		"text="..phrase:gsub(" ","+").."&"..
 		"lang="..lang
 	
-	local response = babel:request(transurl)
-	
-	return extract_phrase(response)
+	httpapi.fetch({url = transurl}, function(htresponse)
+		if htresponse.succeeded then
+			handler(extract_phrase(htresponse.data) )
+		else
+			handler("Failed request")
+			minetest.log("error", "Error on requesting -- "..dump(htresponse))
+		end
+	end)
 end
 
 babel.compliance = "Translations are Powered by Yandex.Translate"
