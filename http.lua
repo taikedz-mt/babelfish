@@ -6,6 +6,9 @@
 -- If not, please see https://www.gnu.org/licenses/lgpl-3.0.html
 
 local ie = minetest.request_insecure_environment()
+if not ie then
+	error("babelfish must be added to your secure.trusted_mods list")
+end
 
 local https = ie.require("ssl.https")
 local http = ie.require("socket.http")
