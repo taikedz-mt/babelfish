@@ -6,10 +6,7 @@
 -- If not, please see https://www.gnu.org/licenses/lgpl-3.0.html
 
 local ie = minetest.request_insecure_environment()
-if not ie then
-	error("babelfish must be added to your secure.trusted_mods list")
-end
-local json = require("json")
+local json = ie.require("json")
 
 
 babel.engine = "YANDEX" -- used for tagging messages
