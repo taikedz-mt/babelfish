@@ -29,28 +29,27 @@ Provided under the GNU Lesser General Public License v3.0
 
 ## Requirements
 
-The server requires `lua-json` and `lua-sec` to be installed, as well as potentially adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
+The server requires `lua-json` to be installed, as well as adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
 
 	secure.trusted_mods = irc,babelfish
 
 On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
 
 	apt-get install luarocks gcc
-	luarocks install luasec
 	luarocks install luajson
 	apt-get remove gcc
 
 # Configuration
 
-(Required) Add your API key to `minetest.conf` under `babelfish.key`
+(*Required*) Add your API key to `minetest.conf` under `babelfish.key`
 
 	babelfish.key = <your key>
 
-(Optional) Add an engine name (bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`. Other engines would need to be developed.
+(*Optional*) Add an engine name (bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`. Other engines would need to be developed.
 
 	babelfish.engine = yandex
 
-(Optional) You can display a friendly message to users who join by setting
+(*Optional*) You can display a friendly message to users who join by setting
 
 	babelfish.helponjoin = true
 
