@@ -35,7 +35,7 @@ require = oldrequire -- restore the sandbox's require
 
 -- ========================== Language engine and overridable validation
 
-function babel.validate_lang(self,langstring)
+function babel.validate_lang(self, langstring)
 	for target, langname in pairs(babel.langcodes) do
 		if target == langstring then
 			return true
@@ -52,6 +52,35 @@ local player_pref_language = {} -- TODO load/save to file
 
 minetest.register_on_chat_message(function(player, message)
 	chat_history[player] = message
+end)
+
+-- Shortcut multi-translation
+-- Send a message like "Hello everyone ! %fr %es %pl"
+-- The message is broadcast in original form, then in French Spanish and Polish
+minetest.register_on_chat_message(function(player, message)
+	-- Search for "%" token
+	local langs = {}
+	while message:find("%..") do
+		local n,m = message:find("%..")
+		local sfront = message:sub(1, n-1)
+		local sback = message:sub(m+1, message:len() )
+		langs[#langs + 1] = message:sub(n+1, m) -- Removes '%' token
+	end
+
+	for _,targetlang in pairs(langs) do
+		local validation = babel:validate_lang(targetlang)
+
+		if validation ~= true then
+			-- Send back the string in [validation]
+			babel.chat_send_player(player, validation)
+
+		else
+			dotranslate(targetlang, targetphrase, function(newphrase)
+				babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
+				minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
+			end)
+		end
+	end
 end)
 
 local function components(mystring)
@@ -175,3 +204,31 @@ minetest.register_chatcommand("bmsg", {
 
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
+
+--[[ NOT READY
+function prefsave()
+	local serdata = minetest.serialize(player_pref_language)
+	if not serdata then
+		minetest.log("error", "[babelfish] Data serialization failed")
+		return
+	end
+	local file, err = io.open(spawnsfile, "w")
+	if err then
+		return err
+	end
+	file:write(serdata)
+	file:close()
+end
+
+function prefload()
+	local file, err = io.open(spawnsfile, "r")
+	if err then
+		minetest.log("error", "[babelfish] Data read failed")
+		return
+	end
+	player_pref_language = minetest.deserialize(file:read("*a"))
+	file:close()
+end
+
+prefload()
+--]]
