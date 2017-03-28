@@ -37,6 +37,12 @@ The token is removed from both messsages.
 * `/bbcodes`
 	* List the available language codes
 
+## Moderator Commands
+
+* `/bbset {player} {langcode}`
+	* set a player's language code
+	* requires `babelmoderator` privilege
+
 ## Requirements
 
 The server requires `lua-json` to be installed, as well as adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:

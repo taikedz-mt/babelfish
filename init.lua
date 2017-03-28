@@ -13,6 +13,8 @@ local langprefs = minetest.get_worldpath().."/babel_langprefs"
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
 
+minetest.register_privilege("babelmoderator")
+
 -- ===== SECURITY ======
 
 local ie = minetest.request_insecure_environment()
@@ -205,6 +207,20 @@ minetest.register_chatcommand("bmsg", {
 	description = "Send a private message to a player, in their preferred language",
 	params = "<player> <sentence>",
 	func = f_babelmsg
+})
+
+-- Admin commands
+
+minetest.register_chatcommand("bbset", {
+	description = "Set a player's preferred language (if they do not know how)",
+	params = "<player> <language-code>",
+	privs = {babelmoderator = true},
+	func = function(player, message)
+		local tplayer, langcode = components(message)
+		if minetest.get_player_by_name(tplayer) then
+			player_pref_language[tplayer] = langcode
+		end
+	end,
 })
 
 -- Display help string, and compliance if set
