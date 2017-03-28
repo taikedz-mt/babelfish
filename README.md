@@ -30,9 +30,9 @@ The token is removed from both messsages.
 	* Default is English
 	* Currently does not save across server reboots
 
-* `/bmsg {language} {player} {sentence}`
+* `/bmsg {player} {sentence}`
 	* Sends a private message to another player in the target language
-	* `/bmsg es spanishplayer I do not understand you, please use the translation commands`
+	* `/bmsg spanishplayer I do not understand you, please use the translation commands`
 
 * `/bbcodes`
 	* List the available language codes
@@ -87,8 +87,7 @@ See the [Engines](Engines.md) file for more information.
 
 Still to implement:
 
-* Book Translator - a node which accepts a book, a language specification, and returns the trnslated book
-* Saving language preferences
+* Book Translator - a node which accepts a book, a language specification, and returns the translated book
 * Set-lang command for moderators to set a player's language
 	* requires privs
 * Special "persistent translations" call so that a phrase is translated once, and stored for later re-use

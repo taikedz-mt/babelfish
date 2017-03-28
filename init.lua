@@ -9,6 +9,7 @@ babel = {}
 
 local modpath = minetest.get_modpath("babelfish")
 dofile(modpath.."/chat.lua" )
+local langprefs = minetest.get_worldpath().."/babel_langprefs"
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
 
@@ -48,7 +49,7 @@ end
 -- =====================================================================/
 
 local chat_history = {}
-local player_pref_language = {} -- TODO load/save to file
+local player_pref_language = {}
 
 minetest.register_on_chat_message(function(player, message)
 	chat_history[player] = message
@@ -146,8 +147,8 @@ local function f_babelshout(player, argstring)
 end
 
 local function f_babelmsg(player, argstring)
-	local targetlang, targetphrase = components(argstring)
-	local targetplayer, targetphrase = components(targetphrase)
+	local targetplayer, targetphrase = components(argstring)
+	local targetlang = player_pref_language[targetplayer]
 
 	local validation = babel:validate_lang(targetlang)
 	if validation ~= true then
@@ -201,22 +202,21 @@ minetest.register_chatcommand("bb", {
 })
 
 minetest.register_chatcommand("bmsg", {
-	description = "Translate a sentence, and send it to a specific player",
-	params = "<lang-code> <player> <sentence>",
+	description = "Send a private message to a player, in their preferred language",
+	params = "<player> <sentence>",
 	func = f_babelmsg
 })
 
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
 
---[[ NOT READY
 function prefsave()
 	local serdata = minetest.serialize(player_pref_language)
 	if not serdata then
 		minetest.log("error", "[babelfish] Data serialization failed")
 		return
 	end
-	local file, err = io.open(spawnsfile, "w")
+	local file, err = io.open(langprefs, "w")
 	if err then
 		return err
 	end
@@ -225,7 +225,7 @@ function prefsave()
 end
 
 function prefload()
-	local file, err = io.open(spawnsfile, "r")
+	local file, err = io.open(langprefs, "r")
 	if err then
 		minetest.log("error", "[babelfish] Data read failed")
 		return
@@ -235,4 +235,3 @@ function prefload()
 end
 
 prefload()
---]]
