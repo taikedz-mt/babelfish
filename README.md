@@ -4,29 +4,6 @@ Add translation commands to Minetest
 
 Provided under the GNU Lesser General Public License v3.0
 
-## Commands
-
-* `/babel {player}`
-	* Translates the last message from the specified player to your preferred language
-	* Only you see the result of this
-	* `/babel mrGibberish`
-
-* `/bblang {language}`
-	* Set your preferred language using a language code
-	* Default is English
-	* Currently does not save across server reboots
-
-* `/bb {language} {sentence}`
-	* Broadcasts a message in the target language (French in this case)
-	* `/bb fr My english sentence`
-
-* `/bmsg {language} {player} {sentence}`
-	* Sends a private message to another player in the target language
-	* `/bmsg es spanishplayer I do not understand you, please use the translation commands`
-
-* `/bbcodes`
-	* List the available language codes
-
 ### Chat intercepts
 
 For global chat, players can simply use a language code preceded by a "%" symbol. For example
@@ -40,6 +17,25 @@ The message will be sent in its original form, as well as in French.
 that is, the token can be anywhere.
 
 The token is removed from both messsages.
+
+## Commands
+
+* `/babel {player}`
+	* Translates the last message from the specified player to your preferred language
+	* Only you see the result of this
+	* `/babel mrGibberish`
+
+* `/bblang {language}`
+	* Set your preferred language using a language code
+	* Default is English
+	* Currently does not save across server reboots
+
+* `/bmsg {language} {player} {sentence}`
+	* Sends a private message to another player in the target language
+	* `/bmsg es spanishplayer I do not understand you, please use the translation commands`
+
+* `/bbcodes`
+	* List the available language codes
 
 ## Requirements
 
