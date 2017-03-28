@@ -54,9 +54,9 @@ minetest.register_on_chat_message(function(player, message)
 	chat_history[player] = message
 end)
 
--- Shortcut multi-translation
--- Send a message like "Hello everyone ! %fr %es %pl"
--- The message is broadcast in original form, then in French Spanish and Polish
+-- Shortcut translation
+-- Send a message like "Hello everyone ! %fr"
+-- The message is broadcast in original form, then in French
 minetest.register_on_chat_message(function(player, message)
 	-- Search for "%" token
 	local langs = {}
@@ -67,20 +67,22 @@ minetest.register_on_chat_message(function(player, message)
 		langs[#langs + 1] = message:sub(n+1, m) -- Removes '%' token
 	end
 
-	for _,targetlang in pairs(langs) do
-		local validation = babel:validate_lang(targetlang)
+	--for _,targetlang in pairs(langs) do -- NO only do it once
+	targetlang = langs[1]
 
-		if validation ~= true then
-			-- Send back the string in [validation]
-			babel.chat_send_player(player, validation)
+	-- True, or error string
+	local validation = babel:validate_lang(targetlang)
 
-		else
-			dotranslate(targetlang, targetphrase, function(newphrase)
-				babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
-				minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
-			end)
-		end
+	if validation ~= true then
+		babel.chat_send_player(player, validation)
+
+	else
+		dotranslate(targetlang, targetphrase, function(newphrase)
+			babel.chat_send_all("["..babel.engine.." "..player.."]: "..newphrase)
+			minetest.log("action", player.." CHAT ["..babel.engine.."]: "..newphrase)
+		end)
 	end
+	--end
 end)
 
 local function components(mystring)

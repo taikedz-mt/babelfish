@@ -27,11 +27,27 @@ Provided under the GNU Lesser General Public License v3.0
 * `/bbcodes`
 	* List the available language codes
 
+### Chat intercepts
+
+For global chat, players can simply use a language code preceded by a "%" symbol. For example
+
+	Hello everyone ! %fr
+
+The message will be sent in its original form, as well as in French.
+
+	Hello %fr everyone !
+
+that is, the token can be anywhere.
+
+The token is removed from both messsages.
+
 ## Requirements
 
 The server requires `lua-json` to be installed, as well as adding the mod to the trusted mods for security purposes. For example when adding both `babelfish` and `irc` as trusted mods:
 
 	secure.trusted_mods = irc,babelfish
+
+Otherwise, you may get errors like `httpapi not defined`
 
 On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
 
@@ -75,6 +91,7 @@ See the [Engines](Engines.md) file for more information.
 
 Still to implement:
 
+* Book Translator - a node which accepts a book, a language specification, and returns the trnslated book
 * Saving language preferences
 * Set-lang command for moderators to set a player's language
 	* requires privs
