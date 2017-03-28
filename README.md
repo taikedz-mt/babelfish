@@ -94,8 +94,6 @@ See the [Engines](Engines.md) file for more information.
 Still to implement:
 
 * Book Translator - a node which accepts a book, a language specification, and returns the translated book
-* Set-lang command for moderators to set a player's language
-	* requires privs
 * Special "persistent translations" call so that a phrase is translated once, and stored for later re-use
 * Special command for translating to all players in their preferred languages
 	* depends on a temp-persistence being implemented

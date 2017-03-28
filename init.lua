@@ -226,7 +226,7 @@ minetest.register_chatcommand("bbset", {
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
 
-function prefsave()
+local function prefsave()
 	local serdata = minetest.serialize(player_pref_language)
 	if not serdata then
 		minetest.log("error", "[babelfish] Data serialization failed")
@@ -240,7 +240,7 @@ function prefsave()
 	file:close()
 end
 
-function prefload()
+local function prefload()
 	local file, err = io.open(langprefs, "r")
 	if err then
 		minetest.log("error", "[babelfish] Data read failed")
