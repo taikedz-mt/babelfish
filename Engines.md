@@ -26,7 +26,15 @@ You can use the `example_engine.lua` file to base a new engine off of. It contai
 
 * The engine can override `babel.validate_lang(self, language_code)` if needed to provide any special messages.
 
-* The engine can use `babel:request(url)`, a helper function which makes the request (http or https) and returns the raw response data.
+* Due to mod security, you will need to provide a way for your engine to receive a safe URL handler. Define this at the top of your file
+
+	local httpapi
+
+	function babel.register_http(hat)
+		httpapi = hat
+	end
+
+* When the babelfish loads your translation engine, a security-enabled URL calling handle will be available to you in your `httpapi` variable. **DO NOT** make the `httpapi` variable or its function public !!
 
 ### Compliance
 
