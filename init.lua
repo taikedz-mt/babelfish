@@ -12,6 +12,7 @@ dofile(modpath.."/chat.lua" )
 local langprefs = minetest.get_worldpath().."/babel_langprefs"
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
+babel.defaultlang = minetest.setting_get("babelfish.defaultlang") or "en"
 
 minetest.register_privilege("babelmoderator")
 
@@ -35,6 +36,30 @@ require = ie.require -- override require so that system libraries being loaded c
 require = oldrequire -- restore the sandbox's require
 
 -- =====================
+
+local function prefsave()
+	local serdata = minetest.serialize(player_pref_language)
+	if not serdata then
+		minetest.log("error", "[babelfish] Data serialization failed")
+		return
+	end
+	local file, err = io.open(langprefs, "w")
+	if err then
+		return err
+	end
+	file:write(serdata)
+	file:close()
+end
+
+local function prefload()
+	local file, err = io.open(langprefs, "r")
+	if err then
+		minetest.log("error", "[babelfish] Data read failed")
+		return
+	end
+	player_pref_language = minetest.deserialize(file:read("*a"))
+	file:close()
+end
 
 -- ========================== Language engine and overridable validation
 
@@ -173,6 +198,16 @@ local function f_babelmsg(player, argstring)
 	end)
 end
 
+local function setplayerlanguage(tplayer, langcode)
+	if minetest.get_player_by_name(tplayer) then
+		player_pref_language[tplayer] = langcode
+	end
+end
+
+local function getplayerlanguage(tplayer)
+	return player_pref_language[tplayer]
+end
+
 minetest.register_chatcommand("bblang", {
 	description = "Set your preferred language",
 	func = function(player,args)
@@ -211,6 +246,7 @@ minetest.register_chatcommand("bb", {
 minetest.register_chatcommand("bmsg", {
 	description = "Send a private message to a player, in their preferred language",
 	params = "<player> <sentence>",
+	privs = {shout = true},
 	func = f_babelmsg
 })
 
@@ -222,37 +258,20 @@ minetest.register_chatcommand("bbset", {
 	privs = {babelmoderator = true},
 	func = function(player, message)
 		local tplayer, langcode = components(message)
-		if minetest.get_player_by_name(tplayer) then
-			player_pref_language[tplayer] = langcode
-		end
+		setplayerlanguage(tplayer, langcode)
 	end,
 })
 
+-- Set player's default language
+
+minetest.register_on_joinplayer(function(player, ip)
+	local playername = player:get_player_name()
+	if not getplayerlanguage(playername) then
+		setplayerlanguage(playername, babel.defaultlang)
+	end
+end)
+
 -- Display help string, and compliance if set
 dofile(minetest.get_modpath("babelfish").."/compliance.lua")
-
-local function prefsave()
-	local serdata = minetest.serialize(player_pref_language)
-	if not serdata then
-		minetest.log("error", "[babelfish] Data serialization failed")
-		return
-	end
-	local file, err = io.open(langprefs, "w")
-	if err then
-		return err
-	end
-	file:write(serdata)
-	file:close()
-end
-
-local function prefload()
-	local file, err = io.open(langprefs, "r")
-	if err then
-		minetest.log("error", "[babelfish] Data read failed")
-		return
-	end
-	player_pref_language = minetest.deserialize(file:read("*a"))
-	file:close()
-end
 
 prefload()
