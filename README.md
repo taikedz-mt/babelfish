@@ -73,6 +73,10 @@ On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; in
 
 Players will see a message when joining inviting them to check `/help bb` and `/help babel`
 
+(*Optional*) You can set the default language that players will be given on joining. If none is set, the default language is English.
+
+	babelfish.defaultlang = fr
+
 ## Integrations
 
 This mod supports additional functions from [IRC](https://github.com/minetest-mods/irc) - any shout actions are propagated through the IRC too.
