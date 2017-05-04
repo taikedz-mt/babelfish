@@ -80,6 +80,10 @@ end
 -- Send a message like "Hello everyone ! %fr"
 -- The message is broadcast in original form, then in French
 minetest.register_on_chat_message(function(player, message)
+	if not minetest.check_player_privs(player, {shout = true}) then
+		return
+	end
+
 	-- Search for "%" token
 	local n,m = message:find("%%..")
 	local targetlang = nil
@@ -200,7 +204,8 @@ minetest.register_chatcommand("babel", {
 minetest.register_chatcommand("bb", {
 	description = "Translate a sentence and transmit it to everybody",
 	params = "<lang-code> <sentence>",
-	func = f_babelshout
+	func = f_babelshout,
+	privs = {shout = true},
 })
 
 minetest.register_chatcommand("bmsg", {
