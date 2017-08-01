@@ -10,6 +10,7 @@ babel = {}
 local modpath = minetest.get_modpath("babelfish")
 dofile(modpath.."/chat.lua" )
 dofile(modpath.."/utilities.lua" )
+dofile(modpath.."/persistence.lua" )
 
 local langprefs = minetest.get_worldpath().."/babel_langprefs"
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
