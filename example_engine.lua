@@ -27,7 +27,7 @@ function babel.register_http(hat)
 end
 
 -- The public-facing translation function
-function babel.translate(self, phrase, lang, handler)
+function babel:translate(phrase, lang, handler)
 	-- phrase : A string of the phrase to translate
 	-- lang : the language code to pass to the server
 	-- handler : a handler function to return the data to babelfish core
