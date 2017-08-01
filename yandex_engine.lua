@@ -5,6 +5,8 @@
 -- in a LICENSE.txt file
 -- If not, please see https://www.gnu.org/licenses/lgpl-3.0.html
 
+babel.compliance = "Translations are Powered by Yandex.Translate"
+
 local json = require("json")
 
 local httpapi
@@ -117,8 +119,8 @@ end
 function babel.translate(self, phrase, lang, handler)
 	local transurl = serviceurl ..
 		"key="..babel.key.."&"..
-		"text="..phrase:gsub(" ","+").."&"..
-		"lang="..lang
+		"text="..babel.sanitize(phrase).."&"..
+		"lang="..babel.sanitize(lang)
 	
 	httpapi.fetch({url = transurl}, function(htresponse)
 		if htresponse.succeeded then
@@ -130,5 +132,3 @@ function babel.translate(self, phrase, lang, handler)
 	end)
 end
 
-babel.compliance = "Translations are Powered by Yandex.Translate"
-dofile(minetest.get_modpath("babelfish").."/compliance.lua")

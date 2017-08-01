@@ -9,6 +9,8 @@ babel = {}
 
 local modpath = minetest.get_modpath("babelfish")
 dofile(modpath.."/chat.lua" )
+dofile(modpath.."/utilities.lua" )
+
 local langprefs = minetest.get_worldpath().."/babel_langprefs"
 local engine = minetest.setting_get("babelfish.engine") or "yandex"
 babel.key = minetest.setting_get("babelfish.key")
@@ -141,7 +143,7 @@ end)
 local function f_babel(player, argstring)
 	local targetplayer = argstring
 	if not player_pref_language[player] then
-		player_pref_language[player] = "en"
+		player_pref_language[player] = babel.defaultlang
 	end
 
 	local targetlang = player_pref_language[player]
@@ -163,6 +165,7 @@ local function f_babel(player, argstring)
 end
 
 local function f_babelshout(player, argstring)
+	-- babel equivalent of shout - broadcast translated message
 	local targetlang, targetphrase = components(argstring)
 
 	local validation = babel:validate_lang(targetlang)
@@ -178,6 +181,7 @@ local function f_babelshout(player, argstring)
 end
 
 local function f_babelmsg(player, argstring)
+	-- babel equivalent of private message
 	local targetplayer, targetphrase = components(argstring)
 	local targetlang = player_pref_language[targetplayer]
 
@@ -201,6 +205,7 @@ end
 local function setplayerlanguage(tplayer, langcode)
 	if minetest.get_player_by_name(tplayer) then
 		player_pref_language[tplayer] = langcode
+		prefsave()
 	end
 end
 
@@ -216,9 +221,8 @@ minetest.register_chatcommand("bblang", {
 			babel.chat_send_player(player, validation)
 			return
 		else
-			player_pref_language[player] = args
+			setplayerlanguage(player, args) -- FIXME this should use the above pref functions
 			babel.chat_send_player(player, args.." : OK" )
-			prefsave()
 		end
 	end
 })
