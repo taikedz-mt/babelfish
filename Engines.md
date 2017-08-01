@@ -1,5 +1,7 @@
 # Translation Engines
 
+## Default engine
+
 Babelfish provides a default translation engine based on Yandex, but also allows you to write your own integration.
 
 Most services are likely to require an API key, and you can add your own configurations as well.
@@ -14,9 +16,10 @@ You can use the `example_engine.lua` file to base a new engine off of. It contai
 
 * The engine must provide a single function onto the `babel` object
 
-	`babel:translate(language_code, sentence)`
+	`function babel:translate(sentence, language_code, handler)`
 
-	* The function must return a string representing the translated text.
+
+	* The function must call `handler( TRANSLATEDSTRING )` with sole argument the translated string.
 
 * The engine must provide a table on `babel.langcodes` containing the list of language codes supported by the service.
 
@@ -24,15 +27,19 @@ You can use the `example_engine.lua` file to base a new engine off of. It contai
 
 * The engine must provide a `babel.engine` string to identify the engine, for display in translation results.
 
-* The engine can override `babel.validate_lang(self, language_code)` if needed to provide any special messages.
+	`babel.engine = "myengine"`
+
+* The engine can override `function babel:validate_lang(language_code)` if needed to provide any special messages.
+	* return `true` if a valid language, or a string stating the error encountered
 
 * Due to mod security, you will need to provide a way for your engine to receive a safe URL handler. Define this at the top of your file
 
-	local httpapi
 
+	local httpapi
 	function babel.register_http(hat)
 		httpapi = hat
 	end
+
 
 * When the babelfish loads your translation engine, a security-enabled URL calling handle will be available to you in your `httpapi` variable. **DO NOT** make the `httpapi` variable or its function public !!
 
@@ -42,5 +49,7 @@ Some translation APIs require you to comply to certain rules; most generally the
 
 A `babel.compliance` variable can optionally be included, as the text to display when a player joins.
 
-The name of the engine is also displayed on all messages sent to chat, so that compliance is met, but also to indicate that the original meaning may have been lost in machine translation.
+	`babel.compliance = "Translations provided by MyService.net"`
+
+The name of the engine is also displayed on all messages sent to chat, so that compliance is met, but also to indicate that the original meaning may have been lost in machine translation... ;-)
 
