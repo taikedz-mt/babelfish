@@ -1,8 +1,12 @@
 # Babelfish
 
-Add translation commands to Minetest
+> Add translation commands to Minetest
+>
+> Provided under the GNU Lesser General Public License v3.0
 
-Provided under the GNU Lesser General Public License v3.0
+Allows Minetest players to communicate across language barriers.
+
+Especially useful for moderators who need to talk to players who communicate in other languages, but also to players who wish to team up with players foreign to them.
 
 ### Chat intercepts
 
@@ -10,13 +14,18 @@ For global chat, players can simply use a language code preceded by a "%" symbol
 
 	Hello everyone ! %fr
 
-The message will be sent in its original form, as well as in French.
+The message will be sent in its original form, as well as in French. The language token can be placed anywhere:
 
 	Hello %fr everyone !
 
-that is, the token can be anywhere.
+Only the first token is interpreted and removed from both messsages.
 
-The token is removed from both messsages.
+	Hello everybody %fr %es
+
+Will send
+
+	Bonjour à tous %es
+
 
 ## Commands
 
@@ -28,7 +37,6 @@ The token is removed from both messsages.
 * `/bblang {language}`
 	* Set your preferred language using a language code
 	* Default is English
-	* Currently does not save across server reboots
 
 * `/bmsg {player} {sentence}`
 	* Sends a private message to another player in the target language
@@ -53,27 +61,33 @@ Otherwise, you may get errors like `httpapi not defined`
 
 On Ubuntu/Debian, Minetest does not pick up on packages in `/usr/local/lib` ; instead you need to install luarocks and then use that
 
-	apt-get install luarocks gcc
-	luarocks install luajson
-	apt-get remove gcc
+	sudo apt-get install luarocks gcc
+	sudo luarocks install luajson
+	sudo apt-get remove gcc
+
+On some distributions, the following is sufficient:
+
+	sudo apt-get install lua-json
+
+Try each before filing a bug...
 
 # Configuration
 
-(*Required*) Add your API key to `minetest.conf` under `babelfish.key`
+(*Required*): Add your API key to `minetest.conf` under `babelfish.key`
 
 	babelfish.key = <your key>
 
-(*Optional*) Add an engine name (bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`. Other engines would need to be developed.
+(*Optional*): Add an engine name (bing, google, etc) to minetest conf under `babelfish.engine`. The default is `yandex`. Other engines would need to be developed.
 
 	babelfish.engine = yandex
 
-(*Optional*) You can display a friendly message to users who join by setting
+(*Optional*): You can display a friendly message to users who join by setting
 
 	babelfish.helponjoin = true
 
 Players will see a message when joining inviting them to check `/help bb` and `/help babel`
 
-(*Optional*) You can set the default language that players will be given on joining. If none is set, the default language is English.
+(*Optional*): You can set the default language that players will be given on joining. If none is set, the default language is English.
 
 	babelfish.defaultlang = fr
 
