@@ -85,6 +85,19 @@ This mod supports additional functions from [IRC](https://github.com/minetest-mo
 
 Other mods can use the babelfish engine simply by calling `babel:translate(phrase, language_code)` to obtain the translated string.
 
+### Persistent translations
+
+You can use the following functions if you expect to serve the same phrase many times.
+
+* `savephrase(id, translation, langcode)`
+	* Save the translation of a phrase
+	* `id` identifies the translation
+* `getphrase(id, langcode)`
+	* retrieve the translation of a phrase
+	* if it does not exist already, it will be translated for storage
+* `forgetphrase(id, langcode)`
+	* utility function to forget a translation for a given language code
+
 **Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
 For hardcoded text that is provided by mods, please use [intllib](https://github.com/minetest-mods/intllib) instead, until persistent translations are added.
