@@ -35,12 +35,10 @@ You can use the `example_engine.lua` file to base a new engine off of. It contai
 * Due to mod security, you will need to provide a way for your engine to receive a safe URL handler. Define this at the top of your file
 
 
-
-	local httpapi
+	`local httpapi
 	function babel.register_http(hat)
 		httpapi = hat
-	end
-
+	end`
 
 
 * When the babelfish loads your translation engine, a security-enabled URL calling handle will be available to you in your `httpapi` variable. **DO NOT** make the `httpapi` variable or its function public !!
