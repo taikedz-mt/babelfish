@@ -99,27 +99,27 @@ This mod supports additional functions from [IRC](https://github.com/minetest-mo
 
 Other mods can use the babelfish engine simply by calling `babel:translate(phrase, language_code)` to obtain the translated string.
 
-### Persistent translations
+This should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
 
-ALPHA - API subject to change
+For hardcoded text that is provided by mods, consider using [intllib](https://github.com/minetest-mods/intllib) instead.
+
+### Persistent translations
 
 You can use the following functions if you expect to serve the same phrase many times - for example you can add this support to building signs.
 
-* `babel.persist_save(id, phrase)`
-* `babel.persist_save(id, phrase, langcode)`
+* `babel:persist_save(id, phrase)`
+* `babel:persist_save(id, phrase, langcode)`
 	* Save a phrase under the chose ID, for example "world-rules"
 	* if langcode is specified, the phrase is store for tha language
 		* if it is the first phrase to be registeredd for that ID, it will also be the default phrase from which translations will be made
-* `babel.persist_get(id, langcode)`
+
+* `babel:persist_get(id, langcode)`
 	* retrieve the translation of a phrase
 	* if it does not exist already, it will be translated and stored
-* `babel.persist_drop(id)`
-* `babel.persist_drop(id, langcode)`
+	
+* `babel:persist_drop(id)`
+* `babel:persist_drop(id, langcode)`
 	* utility function to forget a translation for a given language code
-
-**Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
-
-For hardcoded text that is provided by mods, please use [intllib](https://github.com/minetest-mods/intllib) instead, until persistent translations are added.
 
 ## Adding engines
 
@@ -129,9 +129,9 @@ See the [Engines](Engines.md) file for more information.
 
 Still to implement:
 
+* HitchGuide - a book that displays the main help in the preferred language, and allows setting the preferred language
+* BabelFish - a fish-like item that will translate nodes with text - [placed books](https://github.com/taikedz/everamzah-books), signs, and the likes.
 * Book Translator - a node which accepts a book, a language specification, and returns the translated book
-* Special "persistent translations" call so that a phrase is translated once, and stored for later re-use
 * Special command for translating to all players in their preferred languages
-	* depends on a temp-persistence being implemented
 	* requires privs - this can easily consume the API quota quickly
 	* for moderators/admins making announcements

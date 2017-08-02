@@ -33,7 +33,7 @@ end
 
 -- Main features
 
-babel.persist_save = function(id, phrase, langcode)
+babel.persist_save = function(self, id, phrase, langcode)
 	if not phrasebank[id] then
 		phrasebank[id] = {}
 		phrasebank[id][original] = phrase
@@ -46,7 +46,7 @@ babel.persist_save = function(id, phrase, langcode)
 	ph_save()
 end
 
-babel.persist_get = function(id, langcode)
+babel.persist_get = function(self, id, langcode)
 	if not langcode then
 		langcode = original
 	end
@@ -80,7 +80,7 @@ babel.persist_get = function(id, langcode)
 	end
 end
 
-babel.persist_drop = function(id, langcode)
+babel.persist_drop = function(self, id, langcode)
 	if not langcode then
 		phrasebank[id] = nil
 	else
@@ -93,20 +93,20 @@ end
 -- 
 -- minetest.register_chatcommand("bbp_savehelp",{
 -- 	func = function(username, args)
--- 		babel.persist_save("babel-help", args)
--- 		babel.persist_save("babel-help", "Ceci est l'aide forcée en français", "fr")
+-- 		babel:persist_save("babel-help", args)
+-- 		babel:persist_save("babel-help", "Ceci est l'aide forcée en français", "fr")
 -- 	end
 -- })
 -- 
 -- minetest.register_chatcommand("bbp_gethelp",{
 -- 	func = function(username, args)
--- 		minetest.chat_send_player(username, dump( babel.persist_get("babel-help", args) ) )
+-- 		minetest.chat_send_player(username, dump( babel:persist_get("babel-help", args) ) )
 -- 	end
 -- })
 -- 
 -- minetest.register_chatcommand("bbp_drophelp",{
 -- 	func = function(username, args)
--- 		babel.persist_drop("babel-help", args)
+-- 		babel:persist_drop("babel-help", args)
 -- 	end
 -- })
 -- 
