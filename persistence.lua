@@ -5,6 +5,34 @@ local phrasebankfile = minetest.get_worldpath().."/phrasebank.ser"
 
 local original = "original"
 
+-- File manip
+
+local function ph_save()
+	local serdata = minetest.serialize(phrasebank)
+	if not serdata then
+		minetest.log("info", "[babelfish] Phrasebank serialization failed")
+		return
+	end
+	local file, err = io.open(phrasebankfile, "w")
+	if err then
+		return err
+	end
+	file:write(serdata)
+	file:close()
+end
+
+local function ph_load()
+	local file, err = io.open(phrasebankfile, "r")
+	if err then
+		minetest.log("info", "[babelfish] No phrasebank found")
+		return
+	end
+	phrasebank = minetest.deserialize(file:read("*a"))
+	file:close()
+end
+
+-- Main features
+
 babel.persist_save = function(id, phrase, langcode)
 	if not phrasebank[id] then
 		phrasebank[id] = {}
@@ -32,11 +60,24 @@ babel.persist_get = function(id, langcode)
 	end
 
 	if not phrasebank[id][langcode] then
-		phrasebank[id][langcode] = dotranslate(phrasebank[id][original], langcode)
-		ph_save()
+		if not langcode == original then
+			if babel:validate_lang(langcode) != true then
+				return "Invalid language code "..langcode
+			end
+		end
+		babel:translate(phrasebank[id][original], langcode, function(translated)
+			phrasebank[id][langcode] = translated
+			ph_save()
+		end)
 	end
 
-	return phrasebank[id][langcode]
+	local res = phrasebank[id][langcode]
+
+	if not res then
+		return "(try again later...)"
+	else
+		return res
+	end
 end
 
 babel.persist_drop = function(id, langcode)
@@ -48,58 +89,32 @@ babel.persist_drop = function(id, langcode)
 	ph_save()
 end
 
--- File manip
-
-local function ph_save()
-	local serdata = minetest.serialize(phrasebank)
-	if not serdata then
-		minetest.log("info", "[babelfish] Phrasebank serialization failed")
-		return
-	end
-	local file, err = io.open(phrasebankfile, "w")
-	if err then
-		return err
-	end
-	file:write(serdata)
-	file:close()
-end
-
-local function ph_load()
-	local file, err = io.open(phrasebankfile, "r")
-	if err then
-		minetest.log("info", "[babelfish] No phrasebank found")
-		return
-	end
-	phrasebank = minetest.deserialize(file:read("*a"))
-	file:close()
-end
-
 -- TESTING FUNCTIONS - remove in release
-
-minetest.register_chatcommand("bbp_savehelp",{
-	func = function(username, args)
-		babel.persist_save("babel-help", args)
-		babel.persist_save("babel-help", "Ceci est l'aide forcée en français", "fr")
-	end
-})
-
-minetest.register_chatcommand("bbp_gethelp",{
-	func = function(username, args)
-		minetest.chat_send_player(username, dump( babel.persist_get("babel-help", args) ) )
-	end
-})
-
-minetest.register_chatcommand("bbp_drophelp",{
-	func = function(username, args)
-		babl.presist_drop("babel-help", args)
-	end
-})
-
-minetest.register_chatcommand("bbp_listhelp",{
-	func = function(username, args)
-		minetest.chat_send_player(username, dump(phrasebank["babel-help"]) )
-	end
-})
+-- 
+-- minetest.register_chatcommand("bbp_savehelp",{
+-- 	func = function(username, args)
+-- 		babel.persist_save("babel-help", args)
+-- 		babel.persist_save("babel-help", "Ceci est l'aide forcée en français", "fr")
+-- 	end
+-- })
+-- 
+-- minetest.register_chatcommand("bbp_gethelp",{
+-- 	func = function(username, args)
+-- 		minetest.chat_send_player(username, dump( babel.persist_get("babel-help", args) ) )
+-- 	end
+-- })
+-- 
+-- minetest.register_chatcommand("bbp_drophelp",{
+-- 	func = function(username, args)
+-- 		babel.persist_drop("babel-help", args)
+-- 	end
+-- })
+-- 
+-- minetest.register_chatcommand("bbp_listhelp",{
+-- 	func = function(username, args)
+-- 		minetest.chat_send_player(username, dump(phrasebank["babel-help"]) )
+-- 	end
+-- })
 
 -- Runtime
 
