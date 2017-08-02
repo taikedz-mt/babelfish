@@ -73,10 +73,13 @@ babel.persist_get = function(self, id, langcode)
 
 	local res = phrasebank[id][langcode]
 
+	local enginestring = babel.engine..": "
+	if langcode = original then enginestring = "" end
+
 	if not res then
 		return "(try again later...)"
 	else
-		return res
+		return enginestring..res
 	end
 end
 
