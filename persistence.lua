@@ -3,31 +3,36 @@
 local phrasebank = {}
 local phrasebankfile = minetest.get_worldpath().."/phrasebank.ser"
 
+local original = "original"
+
 babel.persist_save = function(id, phrase, langcode)
 	if not phrasebank[id] then
 		phrasebank[id] = {}
+		phrasebank[id][original] = phrase
 	end
 
-	-- TODO cater for being original and langcoded
-	if not langcode then
-		langcode = "original"
+	if langcode then
+		phrasebank[id][langcode] = phrase
 	end
 
-	phrasebank[id][langcode] = phrase
 	ph_save()
 end
 
 babel.persist_get = function(id, langcode)
 	if not langcode then
-		langcode = "original"
+		langcode = original
 	end
 
 	if not phrasebank[id] then
 		return ""
 	end
 
+	if not phrasebank[id][original] then
+		return nil
+	end
+
 	if not phrasebank[id][langcode] then
-		phrasebank[id][langcode] = dotranslate(phrasebank[id]["original"], langcode)
+		phrasebank[id][langcode] = dotranslate(phrasebank[id][original], langcode)
 		ph_save()
 	end
 
@@ -69,19 +74,30 @@ local function ph_load()
 	file:close()
 end
 
-minetest.register_chatcommand("bbp_save",{
+-- TESTING FUNCTIONS - remove in release
+
+minetest.register_chatcommand("bbp_savehelp",{
 	func = function(username, args)
-		babel.getphrase("babel-help", "")
+		babel.persist_save("babel-help", args)
+		babel.persist_save("babel-help", "Ceci est l'aide forcée en français", "fr")
 	end
 })
 
-minetest.register_chatcommand("bbp_get",{
+minetest.register_chatcommand("bbp_gethelp",{
 	func = function(username, args)
+		minetest.chat_send_player(username, dump( babel.persist_get("babel-help", args) ) )
 	end
 })
 
-minetest.register_chatcommand("bbp_drop",{
+minetest.register_chatcommand("bbp_drophelp",{
 	func = function(username, args)
+		babl.presist_drop("babel-help", args)
+	end
+})
+
+minetest.register_chatcommand("bbp_listhelp",{
+	func = function(username, args)
+		minetest.chat_send_player(username, dump(phrasebank["babel-help"]) )
 	end
 })
 
