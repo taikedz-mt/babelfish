@@ -46,7 +46,7 @@ babel.persist_save = function(self, id, phrase, langcode)
 	ph_save()
 end
 
-babel.persist_get = function(self, id, langcode)
+babel.persist_get = function(self, id, langcode, return_handler)
 	if not langcode then
 		langcode = original
 	end
@@ -68,15 +68,9 @@ babel.persist_get = function(self, id, langcode)
 		babel:translate(phrasebank[id][original], langcode, function(translated)
 			phrasebank[id][langcode] = babel.engine..": "..translated
 			ph_save()
+
+			return_handler(translated)
 		end)
-	end
-
-	local res = phrasebank[id][langcode]
-
-	if not res then
-		return "(try again later...)"
-	else
-		return enginestring..res
 	end
 end
 
@@ -100,7 +94,9 @@ end
 -- 
 -- minetest.register_chatcommand("bbp_gethelp",{
 -- 	func = function(username, args)
--- 		minetest.chat_send_player(username, dump( babel:persist_get("babel-help", args) ) )
+--		babel:persist_get("babel-help", args, function(translated)
+-- 			minetest.chat_send_player(username, dump( translated ) )
+--		end)
 -- 	end
 -- })
 -- 

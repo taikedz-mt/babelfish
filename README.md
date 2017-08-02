@@ -113,9 +113,16 @@ You can use the following functions if you expect to serve the same phrase many 
 	* if langcode is specified, the phrase is store for tha language
 		* if it is the first phrase to be registeredd for that ID, it will also be the default phrase from which translations will be made
 
-* `babel:persist_get(id, langcode)`
-	* retrieve the translation of a phrase
+* `babel:persist_get(id, langcode, return_handler)`
+	* retrieve the translation of a phrase, and pass it to the return handler function
 	* if it does not exist already, it will be translated and stored
+	* Example:
+
+<pre>
+babel:persist("babel-help", "es", function(translated)
+	minetest.chat_send_all(translated)
+end)
+</pre>
 	
 * `babel:persist_drop(id)`
 * `babel:persist_drop(id, langcode)`
