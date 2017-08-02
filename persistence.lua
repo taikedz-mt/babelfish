@@ -66,15 +66,12 @@ babel.persist_get = function(self, id, langcode)
 			end
 		end
 		babel:translate(phrasebank[id][original], langcode, function(translated)
-			phrasebank[id][langcode] = translated
+			phrasebank[id][langcode] = babel.engine..": "..translated
 			ph_save()
 		end)
 	end
 
 	local res = phrasebank[id][langcode]
-
-	local enginestring = babel.engine..": "
-	if langcode = original then enginestring = "" end
 
 	if not res then
 		return "(try again later...)"
