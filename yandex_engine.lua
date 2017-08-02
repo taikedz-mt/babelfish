@@ -126,7 +126,7 @@ function babel.translate(self, phrase, lang, handler)
 		if htresponse.succeeded then
 			handler(extract_phrase(htresponse.data) )
 		else
-			handler("Failed request")
+			handler("Failed request") -- FIXME this returns the literal string to the client. Not good.
 			minetest.log("error", "Error on requesting -- "..dump(htresponse))
 		end
 	end)
