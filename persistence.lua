@@ -3,43 +3,44 @@
 local phrasebank = {}
 local phrasebankfile = minetest.get_worldpath().."/phrasebank.ser"
 
--- Save
-
-local function ph_persist(id, translation, langcode)
+babel.persist_save = function(id, phrase, langcode)
 	if not phrasebank[id] then
 		phrasebank[id] = {}
 	end
 
-	phrasebank[id][langcode] = translation
+	-- TODO cater for being original and langcoded
+	if not langcode then
+		langcode = "original"
+	end
+
+	phrasebank[id][langcode] = phrase
+	ph_save()
 end
 
-babel.savephrase = function(id, translation, langcode)
-	ph_persist(id, translation, langcode)
-end
+babel.persist_get = function(id, langcode)
+	if not langcode then
+		langcode = "original"
+	end
 
--- Forget
+	if not phrasebank[id] then
+		return ""
+	end
 
-babel.forgetphrase = function(id, langcode)
-	if not phrasebank[id] then return end
-	phrasebank[id][langcode] = nil
-end
+	if not phrasebank[id][langcode] then
+		phrasebank[id][langcode] = dotranslate(phrasebank[id]["original"], langcode)
+		ph_save()
+	end
 
--- Retrieve
-
-local function ph_retrieve(id, langcode)
-	if not phrasebank[id] then return "" end
 	return phrasebank[id][langcode]
 end
 
-babel.getphrase = function(phrase, langcode)
-	local gotphrase = babel.ph_retrieve(phrase, langcode)
-
-	if not gotphrase then
-		gotphrase = dotranslate(gotphrase, langcode)
-		ph_persist(phrase, gotphrase, langcode)
+babel.persist_drop = function(id, langcode)
+	if not langcode then
+		phrasebank[id] = nil
+	else
+		phrasebank[id][langcode] = nil
 	end
-
-	return gotphrase
+	ph_save()
 end
 
 -- File manip
@@ -67,6 +68,22 @@ local function ph_load()
 	phrasebank = minetest.deserialize(file:read("*a"))
 	file:close()
 end
+
+minetest.register_chatcommand("bbp_save",{
+	func = function(username, args)
+		babel.getphrase("babel-help", "")
+	end
+})
+
+minetest.register_chatcommand("bbp_get",{
+	func = function(username, args)
+	end
+})
+
+minetest.register_chatcommand("bbp_drop",{
+	func = function(username, args)
+	end
+})
 
 -- Runtime
 

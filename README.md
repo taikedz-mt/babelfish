@@ -101,15 +101,20 @@ Other mods can use the babelfish engine simply by calling `babel:translate(phras
 
 ### Persistent translations
 
-You can use the following functions if you expect to serve the same phrase many times.
+ALPHA - API subject to change
 
-* `savephrase(id, translation, langcode)`
-	* Save the translation of a phrase
-	* `id` identifies the translation
-* `getphrase(id, langcode)`
+You can use the following functions if you expect to serve the same phrase many times - for example you can add this support to building signs.
+
+* `babel.persist_save(id, phrase)`
+* `babel.persist_save(id, phrase, langcode)`
+	* Save a phrase under the chose ID, for example "world-rules"
+	* if langcode is specified, the phrase is store for tha language
+		* if it is the first phrase to be registeredd for that ID, it will also be the default phrase from which translations will be made
+* `babel.persist_get(id, langcode)`
 	* retrieve the translation of a phrase
-	* if it does not exist already, it will be translated for storage
-* `forgetphrase(id, langcode)`
+	* if it does not exist already, it will be translated and stored
+* `babel.persist_drop(id)`
+* `babel.persist_drop(id, langcode)`
 	* utility function to forget a translation for a given language code
 
 **Note** - this should only be used when providing translations for items whose content is set by players dynamically, for example signs, books, etc.
