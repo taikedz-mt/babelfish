@@ -61,7 +61,7 @@ babel.persist_get = function(self, id, langcode, return_handler)
 
 	if not phrasebank[id][langcode] then
 		if not langcode == original then
-			if babel:validate_lang(langcode) != true then
+			if babel:validate_lang(langcode) ~= true then
 				return "Invalid language code "..langcode
 			end
 		end
