@@ -49,7 +49,4 @@ function babel:translate(phrase, lang, handler)
 			minetest.log("error", "Error on requesting -- "..dump(htresponse))
 		end
 	end)
-	
-	-- do further processing on response, or just return it as-is
-	return response
 end
