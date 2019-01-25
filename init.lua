@@ -19,6 +19,9 @@ babel.defaultlang = minetest.setting_get("babelfish.defaultlang") or "en"
 
 minetest.register_privilege("babelmoderator")
 
+local chat_history = {}
+local player_pref_language = {}
+
 -- ===== SECURITY ======
 
 local ie = minetest.request_insecure_environment()
@@ -77,9 +80,6 @@ function babel.validate_lang(self, langstring)
 end
 
 -- =====================================================================/
-
-local chat_history = {}
-local player_pref_language = {}
 
 minetest.register_on_chat_message(function(player, message)
 	chat_history[player] = message
