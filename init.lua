@@ -63,7 +63,7 @@ local function prefload()
 		minetest.log("error", "[babelfish] Data read failed")
 		return
 	end
-	player_pref_language = minetest.deserialize(file:read("*a"))
+	player_pref_language = minetest.deserialize(file:read("*a")) or {}
 	file:close()
 end
 
